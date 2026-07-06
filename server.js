@@ -91,7 +91,7 @@ app.post('/api/verify', async (req, res) => {
 
   // Успех — делаем нужное действие на сервере через RCON
   try {
-    await runRconCommand(`whitelist add ${nickname}`);
+    await runRconCommand(`minecraft:whitelist add ${nickname}`);
     // сюда же можно добавить lp user ${nickname} parent add verified и т.д.
   } catch (err) {
     console.error('RCON error:', err);
