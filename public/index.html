@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Верификация Minecraft</title>
+<style>
+  body { font-family: sans-serif; background:#1e1e2e; color:#eee; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+  .card { background:#28293e; padding:32px; border-radius:12px; width:320px; box-shadow:0 4px 20px rgba(0,0,0,.4); }
+  h1 { font-size:20px; margin-top:0; }
+  input { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:none; box-sizing:border-box; }
+  button { width:100%; padding:10px; border:none; border-radius:6px; background:#5865F2; color:white; cursor:pointer; font-weight:bold; }
+  button:hover { background:#4752c4; }
+  #result { margin-top:12px; font-size:14px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Верификация аккаунта</h1>
+    <input id="nickname" type="text" placeholder="Ник в Minecraft">
+    <input id="code" type="text" placeholder="Код с сервера">
+    <button onclick="verify()">Подтвердить</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function verify() {
+      const nickname = document.getElementById('nickname').value.trim();
+      const code = document.getElementById('code').value.trim();
+      const resultEl = document.getElementById('result');
+      resultEl.textContent = 'Проверяем...';
+
+      try {
+        const res = await fetch('/api/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nickname, code }),
+        });
+        const data = await res.json();
+        resultEl.textContent = res.ok ? data.message : data.error;
+        resultEl.style.color = res.ok ? '#4ade80' : '#f87171';
+      } catch (e) {
+        resultEl.textContent = 'Ошибка соединения с сервером';
+        resultEl.style.color = '#f87171';
+      }
+    }
+  </script>
+</body>
+</html>
