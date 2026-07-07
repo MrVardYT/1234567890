@@ -6,6 +6,8 @@
 const express = require('express');
 const path = require('path');
 const { Rcon } = require('rcon-client'); // npm install rcon-client
+const cronjob = require('node-cron')
+const ping = require('ping')
 
 const app = express();
 app.use(express.json());
@@ -103,3 +105,7 @@ app.post('/api/verify', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Verify server running on port ${PORT}`));
+
+cronjob.schedule('*/10 * * * *', () => {
+    ping.sys.probe("https://heal-uk5d.onrender.com");
+ });
