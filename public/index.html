@@ -8,58 +8,100 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-sky-top: #cfe8d8;
-    --bg-sky-bottom: #eaf4ec;
     --leaf-1: #0c1f12;
     --leaf-2: #16311c;
     --leaf-3: #234826;
     --leaf-4: #305e33;
     --leaf-5: #457048;
-    --panel-stone: #4a4a4a;
     --panel-stone-light: #6b6b6b;
     --panel-stone-dark: #2b2b2b;
     --panel-bg: #2f2f2f;
+    --card-bg: #242424;
     --input-bg: #1c1c1c;
     --ember: #e2b13c;
     --ember-glow: #f7d878;
     --ok: #6fcf6f;
     --err: #e05a4e;
     --text: #e9e9e2;
+    --muted: #a9a99e;
   }
 
   * { box-sizing: border-box; }
 
-  html, body {
-    margin: 0;
-    height: 100%;
-    font-family: 'Silkscreen', monospace;
-    color: var(--text);
-  }
+  html { scroll-behavior: smooth; }
 
   body {
-    min-height: 100vh;
+    margin: 0;
+    font-family: 'Silkscreen', monospace;
+    color: var(--text);
+    background: var(--leaf-1);
+  }
+
+  /* ---------- Верхняя горизонтальная навигация (как на minecraft.net) ---------- */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 24px;
+    background: rgba(18, 22, 15, .92);
+    border-bottom: 3px solid var(--panel-stone-dark);
+    backdrop-filter: blur(2px);
+  }
+
+  .topnav__brand img { height: 22px; image-rendering: pixelated; display: block; }
+
+  .topnav__links {
+    display: flex;
+    gap: 4px;
+  }
+
+  .topnav__links a {
+    font-family: 'Silkscreen', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 8px 14px;
+    border-bottom: 2px solid transparent;
+  }
+  .topnav__links a:hover,
+  .topnav__links a.is-active {
+    color: var(--ember-glow);
+    border-bottom-color: var(--ember);
+  }
+
+  .topnav__cta {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #14260f;
+    background: linear-gradient(to bottom, #8fd15a, #5aa53a);
+    border: none;
+    padding: 10px 14px;
+    cursor: pointer;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,.4), inset -2px -2px 0 rgba(0,0,0,.3);
+    white-space: nowrap;
+  }
+  .topnav__cta:active { transform: translateY(1px); }
+
+  /* ---------- Геройский блок с силуэтом джунглей ---------- */
+  .hero {
     position: relative;
-    background: linear-gradient(to bottom, var(--bg-sky-top) 0%, var(--bg-sky-bottom) 55%, var(--leaf-1) 100%);
+    min-height: 62vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    padding: 40px 20px 0;
+    background: linear-gradient(to bottom, #cfe8d8 0%, #eaf4ec 55%, var(--leaf-1) 100%);
   }
 
-  /* ---------- Слоистый силуэт джунглей (парал­лакс из плоских "пиксельных" форм) ---------- */
-  .scene {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
-
-  .layer {
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    background: var(--leaf-4);
-  }
-
-  /* Дальний план — самый светлый и высокий силуэт крон */
+  .scene { position: absolute; inset: 0; z-index: 0; }
+  .layer { position: absolute; left: 0; right: 0; bottom: 0; }
   .layer--far {
     height: 46%;
     background: var(--leaf-5);
@@ -70,7 +112,6 @@
     );
     opacity: .9;
   }
-
   .layer--mid {
     height: 40%;
     background: var(--leaf-3);
@@ -80,7 +121,6 @@
       78% 40%, 78% 68%, 90% 68%, 90% 50%, 100% 50%, 100% 100%
     );
   }
-
   .layer--near {
     height: 30%;
     background: var(--leaf-2);
@@ -90,22 +130,13 @@
       92% 10%, 92% 40%, 100% 40%, 100% 100%
     );
   }
+  .layer--ground { height: 14%; background: var(--leaf-1); }
 
-  .layer--ground {
-    height: 14%;
-    background: var(--leaf-1);
-  }
-
-  /* Свисающие лианы — блочные вертикальные полосы */
   .vine {
     position: absolute;
     top: -4%;
     width: 18px;
-    background: repeating-linear-gradient(
-      to bottom,
-      var(--leaf-1) 0 10px,
-      transparent 10px 14px
-    );
+    background: repeating-linear-gradient(to bottom, var(--leaf-1) 0 10px, transparent 10px 14px);
     opacity: .85;
   }
   .vine--1 { left: 6%;  height: 32%; }
@@ -113,13 +144,11 @@
   .vine--3 { left: 81%; height: 38%; }
   .vine--4 { left: 92%; height: 26%; }
 
-  /* Светлячки / искры факела — единственный тёплый акцент на холодной сцене */
   .firefly {
     position: absolute;
     width: 4px; height: 4px;
     background: var(--ember-glow);
     box-shadow: 0 0 6px 2px var(--ember-glow);
-    border-radius: 1px;
     animation: drift 7s ease-in-out infinite;
     opacity: 0;
   }
@@ -130,210 +159,139 @@
     85%  { opacity: .8; }
     100% { opacity: 0; transform: translate(-6px, -40px); }
   }
+  @media (prefers-reduced-motion: reduce) { .firefly { animation: none; opacity: .6; } }
 
-  @media (prefers-reduced-motion: reduce) {
-    .firefly { animation: none; opacity: .6; }
-  }
+  .hero__content { position: relative; z-index: 2; }
 
-  main {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    width: min(380px, 90vw);
-  }
+  .hero__logo { height: 64px; image-rendering: pixelated; margin-bottom: 18px; }
 
-  .tabs {
-    display: flex;
-    width: 100%;
-  }
-
-  .tab-btn {
-    flex: 1;
+  .hero__tagline {
     font-family: 'Silkscreen', monospace;
-    font-size: 11px;
-    color: #cfcfc4;
-    background: var(--panel-stone-dark);
-    border: none;
-    padding: 10px 4px;
-    cursor: pointer;
-    box-shadow: inset 2px 2px 0 rgba(255,255,255,.08), inset -2px -2px 0 rgba(0,0,0,.4);
-  }
-  .tab-btn + .tab-btn { margin-left: 3px; }
-  .tab-btn.is-active {
-    background: var(--panel-bg);
-    color: var(--ember-glow);
-    box-shadow: inset 2px 2px 0 var(--panel-stone-light), inset -2px 0 0 rgba(0,0,0,.4);
-  }
-
-  .tab-panel { display: none; width: 100%; }
-  .tab-panel.is-active { display: block; }
-
-  /* ---------- Блок описания сервера ---------- */
-  .server-card {
-    width: 100%;
-    background: var(--panel-bg);
-    padding: 18px;
-    box-shadow:
-      inset 4px 4px 0 var(--panel-stone-light),
-      inset -4px -4px 0 var(--panel-stone-dark),
-      0 10px 30px rgba(0,0,0,.45);
-  }
-
-  .server-card__banner {
-    width: 100%;
-    aspect-ratio: 16 / 6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 14px;
-    background: #1c1c1c;
-    padding: 10px;
-  }
-  .server-card__banner img {
-    max-width: 100%;
-    max-height: 100%;
-    image-rendering: pixelated;
-  }
-
-  .server-card__title {
-    font-family: 'Press Start 2P', monospace;
     font-size: 15px;
-    color: var(--ember-glow);
-    text-shadow: 2px 2px 0 rgba(0,0,0,.5);
-    margin: 0 0 10px;
-    text-align: center;
-  }
-
-  .server-card__row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    padding: 6px 0;
-    border-bottom: 1px dashed #4a4a4a;
-  }
-  .server-card__row:last-of-type { border-bottom: none; }
-  .server-card__row span:first-child { color: #a9a99e; }
-
-  .server-card__ip {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .server-card__ip code {
-    font-family: 'Silkscreen', monospace;
     color: var(--text);
-    background: var(--input-bg);
-    padding: 3px 6px;
-    box-shadow: inset 1px 1px 0 #000, inset -1px -1px 0 #444;
+    text-shadow: 2px 2px 0 rgba(0,0,0,.5);
+    max-width: 480px;
+    margin: 0 auto 26px;
+    line-height: 1.6;
   }
-  .copy-btn {
+
+  .hero__ip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(20, 20, 20, .55);
+    padding: 10px 16px;
+    margin-bottom: 30px;
+  }
+  .hero__ip code {
+    font-family: 'Silkscreen', monospace;
+    font-size: 14px;
+    color: var(--ember-glow);
+  }
+  .hero__ip button {
     font-family: 'Silkscreen', monospace;
     font-size: 10px;
     background: linear-gradient(to bottom, #6b6b6b, #4a4a4a);
     color: var(--text);
     border: none;
-    padding: 3px 8px;
+    padding: 4px 10px;
     cursor: pointer;
     box-shadow: inset 1px 1px 0 rgba(255,255,255,.25), inset -1px -1px 0 rgba(0,0,0,.35);
   }
-  .copy-btn:active { transform: translateY(1px); }
 
-  .server-card__desc {
-    font-size: 12px;
-    line-height: 1.6;
-    color: #cfcfc4;
-    margin: 12px 0 14px;
+  /* ---------- Секции-контент на всю ширину ---------- */
+  .section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 24px;
   }
 
-  .server-card__rules-title {
+  .section__eyebrow {
     font-size: 11px;
-    color: #a9a99e;
-    margin: 0 0 8px;
+    letter-spacing: .08em;
     text-transform: uppercase;
-    letter-spacing: .05em;
-  }
-
-  .server-card__rules {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    font-size: 12px;
-    line-height: 1.8;
-  }
-  .server-card__rules li {
-    padding-left: 16px;
-    position: relative;
-  }
-  .server-card__rules li::before {
-    content: "▸";
-    position: absolute;
-    left: 0;
     color: var(--ember);
+    margin: 0 0 8px;
   }
 
+  .section__title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--text);
+    margin: 0 0 28px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,.5);
+  }
 
-  .server-card,
-  .panel {
+  /* О сервере: карточки версии/режима + описание */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 640px) { .about-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card-bg);
+    padding: 20px;
+    box-shadow:
+      inset 3px 3px 0 var(--panel-stone-light),
+      inset -3px -3px 0 var(--panel-stone-dark);
+  }
+
+  .card__label { font-size: 11px; color: var(--muted); margin: 0 0 6px; text-transform: uppercase; letter-spacing: .05em; }
+  .card__value { font-size: 15px; color: var(--text); margin: 0; }
+
+  .about-desc {
+    grid-column: 1 / -1;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #cfcfc4;
+  }
+
+  /* Правила: список карточек-строк */
+  .rules-list { display: grid; gap: 10px; }
+  .rule {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--card-bg);
+    padding: 14px 16px;
+    box-shadow: inset 3px 3px 0 var(--panel-stone-light), inset -3px -3px 0 var(--panel-stone-dark);
+  }
+  .rule__num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: var(--ember);
+    flex-shrink: 0;
+  }
+  .rule__text { font-size: 13px; line-height: 1.6; color: #d8d8ce; }
+
+  /* Верификация: форма встроена прямо в раздел */
+  .verify-panel {
+    max-width: 420px;
+    margin: 0 auto;
+    background: var(--panel-bg);
+    padding: 26px 24px 28px;
     box-shadow:
       inset 4px 4px 0 var(--panel-stone-light),
       inset -4px -4px 0 var(--panel-stone-dark),
       0 10px 30px rgba(0,0,0,.45);
   }
 
-  .panel {
-    padding: 22px 20px 24px;
-    background: var(--panel-bg);
-  }
-
-  .panel__title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 13px;
-    line-height: 1.6;
-    text-align: center;
-    color: var(--ember-glow);
-    text-shadow: 2px 2px 0 rgba(0,0,0,.5);
-    margin: 0 0 6px;
-  }
-
-  .panel__subtitle {
-    text-align: center;
-    font-size: 13px;
-    color: #b9b9ae;
-    margin: 0 0 18px;
-  }
-
-  .field {
-    margin-bottom: 14px;
-  }
-
-  .field label {
-    display: block;
-    font-size: 11px;
-    margin-bottom: 6px;
-    color: #cfcfc4;
-  }
-
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 11px; margin-bottom: 6px; color: #cfcfc4; }
   .field input {
     width: 100%;
     background: var(--input-bg);
     border: none;
-    box-shadow:
-      inset 2px 2px 0 #000,
-      inset -2px -2px 0 #444;
-    padding: 10px 10px;
+    box-shadow: inset 2px 2px 0 #000, inset -2px -2px 0 #444;
+    padding: 10px;
     color: var(--text);
     font-family: 'Silkscreen', monospace;
     font-size: 14px;
   }
   .field input::placeholder { color: #6b6b62; }
-  .field input:focus {
-    outline: 2px solid var(--ember);
-    outline-offset: 2px;
-  }
+  .field input:focus { outline: 2px solid var(--ember); outline-offset: 2px; }
 
   .btn {
     width: 100%;
@@ -344,132 +302,119 @@
     color: #14260f;
     background: linear-gradient(to bottom, #8fd15a, #5aa53a);
     border: none;
-    box-shadow:
-      inset 2px 2px 0 rgba(255,255,255,.4),
-      inset -2px -2px 0 rgba(0,0,0,.3);
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,.4), inset -2px -2px 0 rgba(0,0,0,.3);
     cursor: pointer;
   }
   .btn:hover { filter: brightness(1.08); }
-  .btn:active {
-    box-shadow:
-      inset 2px 2px 0 rgba(0,0,0,.3),
-      inset -2px -2px 0 rgba(255,255,255,.2);
-    transform: translateY(1px);
-  }
+  .btn:active { box-shadow: inset 2px 2px 0 rgba(0,0,0,.3), inset -2px -2px 0 rgba(255,255,255,.2); transform: translateY(1px); }
   .btn:disabled { opacity: .6; cursor: default; }
 
-  .result {
-    margin-top: 14px;
-    font-size: 12px;
-    text-align: center;
-    min-height: 18px;
-  }
+  .result { margin-top: 14px; font-size: 12px; text-align: center; min-height: 18px; }
   .result--ok { color: var(--ok); }
   .result--err { color: var(--err); }
 
-  .hint {
-    margin-top: 16px;
-    font-size: 10px;
-    color: #8a8a80;
+  .hint { margin-top: 16px; font-size: 10px; color: #8a8a80; text-align: center; line-height: 1.6; }
+
+  footer {
     text-align: center;
-    line-height: 1.6;
+    padding: 30px 20px 40px;
+    font-size: 10px;
+    color: #6b6b62;
   }
 </style>
 </head>
 <body>
 
-  <div class="scene" aria-hidden="true">
-    <div class="layer layer--far"></div>
-    <div class="layer layer--mid"></div>
-    <div class="layer layer--near"></div>
-    <div class="layer layer--ground"></div>
-    <div class="vine vine--1"></div>
-    <div class="vine vine--2"></div>
-    <div class="vine vine--3"></div>
-    <div class="vine vine--4"></div>
-    <div class="firefly" style="left:20%; bottom:20%; animation-delay:0s;"></div>
-    <div class="firefly" style="left:55%; bottom:16%; animation-delay:2s;"></div>
-    <div class="firefly" style="left:75%; bottom:24%; animation-delay:4s;"></div>
-    <div class="firefly" style="left:38%; bottom:12%; animation-delay:1.2s;"></div>
-  </div>
+  <nav class="topnav">
+    <div class="topnav__brand"><img src="assets/logo.png" alt="HealVanila"></div>
+    <div class="topnav__links">
+      <a href="#about" class="is-active">О сервере</a>
+      <a href="#rules">Правила</a>
+      <a href="#verify">Верификация</a>
+    </div>
+    <button class="topnav__cta" onclick="document.getElementById('verify').scrollIntoView({behavior:'smooth'})">Играть</button>
+  </nav>
 
-  <main>
-    <div class="tabs">
-      <button class="tab-btn is-active" data-tab="about" onclick="switchTab('about')">О сервере</button>
-      <button class="tab-btn" data-tab="rules" onclick="switchTab('rules')">Правила</button>
-      <button class="tab-btn" data-tab="verify" onclick="switchTab('verify')">Верификация</button>
+  <section class="hero">
+    <div class="scene" aria-hidden="true">
+      <div class="layer layer--far"></div>
+      <div class="layer layer--mid"></div>
+      <div class="layer layer--near"></div>
+      <div class="layer layer--ground"></div>
+      <div class="vine vine--1"></div>
+      <div class="vine vine--2"></div>
+      <div class="vine vine--3"></div>
+      <div class="vine vine--4"></div>
+      <div class="firefly" style="left:20%; bottom:20%; animation-delay:0s;"></div>
+      <div class="firefly" style="left:55%; bottom:16%; animation-delay:2s;"></div>
+      <div class="firefly" style="left:75%; bottom:24%; animation-delay:4s;"></div>
+      <div class="firefly" style="left:38%; bottom:12%; animation-delay:1.2s;"></div>
     </div>
 
-    <section class="tab-panel is-active" id="tab-about">
-      <div class="server-card">
-        <div class="server-card__banner">
-          <img src="assets/logo.png" alt="HealVanila">
-        </div>
-
-        <div class="server-card__row">
-          <span>Версия</span>
-          <span>1.21.11</span>
-        </div>
-        <div class="server-card__row">
-          <span>IP сервера</span>
-          <span class="server-card__ip">
-            <code id="serverIp">151.248.115.92:27050</code>
-            <button class="copy-btn" onclick="copyIp()">копировать</button>
-          </span>
-        </div>
-
-        <p class="server-card__desc">
-          HealVanila — ванильное выживание с аккуратными плагинами, которые не ломают классический геймплей: честная экономика, защита территорий и качество жизни без читерских добавок.
-        </p>
+    <div class="hero__content">
+      <img class="hero__logo" src="assets/logo.png" alt="HealVanila">
+      <p class="hero__tagline">Ванильное выживание с аккуратными плагинами.<br>Честная экономика, защита территорий, никакого читерства.</p>
+      <div class="hero__ip">
+        <code id="serverIp">151.248.115.92:27050</code>
+        <button onclick="copyIp()">копировать</button>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="tab-panel" id="tab-rules">
-      <div class="server-card">
-        <p class="server-card__rules-title">Правила сервера</p>
-        <ul class="server-card__rules">
-          <li>Гриферство и кража чужих построек запрещены</li>
-          <li>Читы, x-ray и любые чит-клиенты — бан</li>
-          <li>Уважай других игроков, без оскорблений и спама</li>
-          <li>Не используй баги сервера в свою пользу</li>
-          <li>Реклама других серверов запрещена</li>
-        </ul>
+  <section class="section" id="about">
+    <p class="section__eyebrow">Сервер</p>
+    <h2 class="section__title">О сервере</h2>
+    <div class="about-grid">
+      <div class="card">
+        <p class="card__label">Версия</p>
+        <p class="card__value">1.21.11</p>
       </div>
-    </section>
-
-    <section class="tab-panel" id="tab-verify">
-      <div class="panel">
-        <h1 class="panel__title">Верификация</h1>
-        <p class="panel__subtitle">Введи ник и код, который тебе выдал сервер при входе</p>
-
-        <div class="field">
-          <label for="nickname">Ник в Minecraft</label>
-          <input id="nickname" type="text" placeholder="Steve" autocomplete="off">
-        </div>
-
-        <div class="field">
-          <label for="code">Код с сервера</label>
-          <input id="code" type="text" placeholder="000000" autocomplete="off" inputmode="numeric">
-        </div>
-
-        <button class="btn" id="submitBtn" onclick="verify()">Подтвердить</button>
-
-        <div id="result" class="result" role="status" aria-live="polite"></div>
-
-        <p class="hint">Код действителен 10 минут с момента попытки входа на сервер</p>
+      <div class="card">
+        <p class="card__label">Режим</p>
+        <p class="card__value">Ванилла+</p>
       </div>
-    </section>
-  </main>
+      <p class="about-desc">
+        HealVanila — ванильное выживание с аккуратными плагинами, которые не ломают классический геймплей: честная экономика, защита территорий и качество жизни без читерских добавок.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="rules">
+    <p class="section__eyebrow">Важно</p>
+    <h2 class="section__title">Правила</h2>
+    <div class="rules-list">
+      <div class="rule"><span class="rule__num">01</span><span class="rule__text">Гриферство и кража чужих построек запрещены</span></div>
+      <div class="rule"><span class="rule__num">02</span><span class="rule__text">Читы, x-ray и любые чит-клиенты — бан</span></div>
+      <div class="rule"><span class="rule__num">03</span><span class="rule__text">Уважай других игроков, без оскорблений и спама</span></div>
+      <div class="rule"><span class="rule__num">04</span><span class="rule__text">Не используй баги сервера в свою пользу</span></div>
+      <div class="rule"><span class="rule__num">05</span><span class="rule__text">Реклама других серверов запрещена</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="verify">
+    <p class="section__eyebrow">Последний шаг</p>
+    <h2 class="section__title">Верификация</h2>
+    <div class="verify-panel">
+      <div class="field">
+        <label for="nickname">Ник в Minecraft</label>
+        <input id="nickname" type="text" placeholder="Steve" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="code">Код с сервера</label>
+        <input id="code" type="text" placeholder="000000" autocomplete="off" inputmode="numeric">
+      </div>
+      <button class="btn" id="submitBtn" onclick="verify()">Подтвердить</button>
+      <div id="result" class="result" role="status" aria-live="polite"></div>
+      <p class="hint">Код действителен 10 минут с момента попытки входа на сервер</p>
+    </div>
+  </section>
+
+  <footer>HealVanila · неофициальный проект, не связан с Mojang/Microsoft</footer>
 
   <script>
-    function switchTab(name) {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('is-active', b.dataset.tab === name));
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('is-active', p.id === 'tab-' + name));
-    }
-
     function copyIp() {
       navigator.clipboard.writeText(document.getElementById('serverIp').textContent);
-      const btn = document.querySelector('.copy-btn');
+      const btn = document.querySelector('.hero__ip button');
       const original = btn.textContent;
       btn.textContent = 'скопировано!';
       setTimeout(() => { btn.textContent = original; }, 1500);
@@ -512,6 +457,17 @@
 
     document.getElementById('code').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') verify();
+    });
+
+    // Подсветка активного пункта меню при скролле
+    const sections = ['about', 'rules', 'verify'].map(id => document.getElementById(id));
+    const links = document.querySelectorAll('.topnav__links a');
+    window.addEventListener('scroll', () => {
+      let current = sections[0].id;
+      for (const s of sections) {
+        if (window.scrollY + 100 >= s.offsetTop) current = s.id;
+      }
+      links.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + current));
     });
   </script>
 </body>
